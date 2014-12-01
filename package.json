@@ -17,6 +17,7 @@
   },
   "homepage": "https://github.com/RaveJS/rave-cli",
   "dependencies": {
-    "liftoff": "^0.13.6"
+    "liftoff": "^0.13.6",
+    "minimist": "^1.1.0"
   }
 }

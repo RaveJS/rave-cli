@@ -1,0 +1,17 @@
+#!/usr/bin/env node
+
+var Liftoff = require('liftoff');
+var rave = new Liftoff({name:'myapp'});
+var argv = require('minimist')(process.argv.slice(2));
+
+rave.launch({
+	cwd: argv.cwd,
+	configPath: argv.myappfile,
+	require: argv.require,
+	completion: argv.completion
+}, run);
+
+function run(env) {
+	console.log('env:', env);
+	console.log('argv:', argv);
+};
