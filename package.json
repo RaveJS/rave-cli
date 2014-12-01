@@ -1,0 +1,22 @@
+{
+  "name": "rave-cli",
+  "version": "0.1.0",
+  "description": "Rave command line interface",
+  "bin": "bin/rave",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/RaveJS/rave-cli.git"
+  },
+  "keywords": [
+    "rave"
+  ],
+  "author": "brian@hovercraftstudios.com",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/RaveJS/rave-cli/issues"
+  },
+  "homepage": "https://github.com/RaveJS/rave-cli",
+  "dependencies": {
+    "liftoff": "^0.13.6"
+  }
+}
