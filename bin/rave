@@ -1,17 +1,75 @@
 #!/usr/bin/env node
 
 var Liftoff = require('liftoff');
-var rave = new Liftoff({name:'myapp'});
 var argv = require('minimist')(process.argv.slice(2));
 
-rave.launch({
-	cwd: argv.cwd,
-	configPath: argv.myappfile,
-	require: argv.require,
-	completion: argv.completion
-}, run);
-
-function run(env) {
-	console.log('env:', env);
-	console.log('argv:', argv);
+var commands = {
+	build: build,
+	unbuild: unbuild,
+	help: help
 };
+
+run(argv._[0], argv);
+
+function run(name, argv) {
+	var command = commands[name];
+	if(typeof command !== 'function') {
+		return fail(name, argv);
+	}
+
+	return command(name, argv);
+}
+
+function fail(name, argv) {
+	console.error('Unrecognized command: ' + name);
+	help(name, argv);
+	process.exit(1);
+}
+
+function help() {
+	console.log('Command line help coming soon ...');
+}
+
+function build(name, argv) {
+	return raveBuild(name, argv, runRaveBuild);
+}
+
+function runRaveBuild(env) {
+	console.log('Rave build', env.modulePath);
+	require(env.modulePath).build({ raveMeta: env.configPath })
+}
+
+function unbuild(name, argv) {
+	return raveBuild(name, argv, runRaveUnbuild);
+}
+
+function runRaveUnbuild(env) {
+	console.log('Rave unbuild');
+	require(env.modulePath).unbuild({ raveMeta: env.configPath });
+}
+
+function raveBuild(name, argv, handler) {
+	var app = new Liftoff({
+		processTitle: 'rave-' + name,
+		moduleName: 'rave-build',
+		configName: '{package,bower}',
+		extensions: { '.json': null }
+	});
+
+	app.launch({
+		cwd: argv.cwd,
+		configPath: argv.config
+	}, changeDirAndCall(handler));
+}
+
+function changeDirAndCall(handler) {
+	return function(env) {
+		if (process.cwd() !== env.cwd) {
+			process.chdir(env.cwd);
+		}
+
+		return handler(env);
+	}
+}
+
+
